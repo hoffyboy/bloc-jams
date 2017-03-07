@@ -78,10 +78,16 @@ var albumHoffy = {
  
  window.onload = function() {
      setCurrentAlbum(albumPicasso);
- };
-var albumCover = document.getElementsByClassName("album-cover-art")[0];
-
-albumCover.addEventListener("click", function(){
-    
-    setCurrentAlbum(albumHoffy);
-});
+     
+     var albums = [albumPicasso, albumMarconi, albumHoffy];
+     var index = 1;
+     
+     var albumCover = document.getElementsByClassName("album-cover-art")[0];
+     albumCover.addEventListener("click", function(event){
+     setCurrentAlbum(albums[index]);
+         index++;
+         if(index == albums.length) {
+             index = 0;
+         }
+     });
+};
