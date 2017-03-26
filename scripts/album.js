@@ -1,3 +1,29 @@
+var setCurrentTimeInPlayerBar = function(currentTime){
+    var filteredCurrentTime = filterTimeCode(currentTime);
+    $(".current-time").text(filteredCurrentTime);
+    
+};
+
+var setTotalTimeInPlayerBar = function(totalTime){
+    var filteredTotalTime = filterTimeCode(totalTime);
+    $(".total-time").text(filteredTotalTime);
+    
+};
+
+var filterTimeCode = function(timeInSeconds){
+    parseFloat(timeInSeconds);
+    var minutes = Math.floor(timeInSeconds / 60);
+    var seconds = Math.floor(timeInSeconds - minutes * 60);
+    if (seconds < 10){
+        seconds = "0" + seconds;
+        } else if (seconds > 9){
+            seconds = Math.floor(timeInSeconds - minutes * 60);
+        };
+    
+    var time = minutes + ":" + seconds;
+    return time
+};
+
 var setSong = function (songNumber){
          
     if (currentSoundFile) {
@@ -38,7 +64,7 @@ var createSongRow = function(songNumber, songName, songLength) {
         '<tr class="album-view-song-item">'
       + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
       + '  <td class="song-item-title">' + songName + '</td>'
-      + '  <td class="song-item-duration">' + songLength + '</td>'
+      + '  <td class="song-item-duration">' + filterTimeCode(songLength) + '</td>'
       + '</tr>'
       ;
  
@@ -59,8 +85,6 @@ var createSongRow = function(songNumber, songName, songLength) {
         updateSeekBarWhileSongPlays();
         currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
         
-//        Why does this go here?
-        
         var $volumeFill = $('.volume .fill');
         var $volumeThumb = $('.volume .thumb');
         $volumeFill.width(currentVolume + '%');
@@ -70,7 +94,7 @@ var createSongRow = function(songNumber, songName, songLength) {
         updatePlayerBarSong();
      } else if (currentlyPlayingSongNumber === songNumber) {
          if (currentSoundFile.isPaused()){
-             $(this).html(pauseButtonTemplate);
+            $(this).html(pauseButtonTemplate);
             $('.main-controls .play-pause').html(playerBarPauseButton);
              currentSoundFile.play();
              updateSeekBarWhileSongPlays();
@@ -143,6 +167,8 @@ var createSongRow = function(songNumber, songName, songLength) {
              var $seekBar = $('.seek-control .seek-bar');
  
              updateSeekPercentage($seekBar, seekBarFillRatio);
+//             var secondsCoverted = filterTimeCode(this.getTime());
+             setCurrentTimeInPlayerBar(this.getTime());
          });
      }
  };
@@ -264,6 +290,8 @@ var updatePlayerBarSong = function() {
     $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + ' - ' + currentAlbum.artist);
     
     $('.main-controls .play-pause').html(playerBarPauseButton);
+    
+    setTotalTimeInPlayerBar(currentSongFromAlbum.duration);
 };
 
 
